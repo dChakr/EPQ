@@ -10,7 +10,7 @@ pageHeight = 30
 vScale = {0: 10, 1: 9, 2: 8, 3: 7, 4: 6, 5: 5, 6: 4, 7: 3, 8: 2, 9: 1}
 
 try:
-    originalIm = Image.open("/Users/dyuti/OneDrive/School Year 12/EPQ/Code/Apple.jpg")
+    originalIm = Image.open("/Users/Apple.jpg") #my specific file path omitted for privacy
 except:
     print("the original image could not be opened")
 
@@ -45,4 +45,4 @@ for x in range(0,w):
         dotDen[y,x] = code
 
 # save dotDen array as csv (in same directory as image)
-numpy.savetxt("/Users/dyuti/OneDrive/School Year 12/EPQ/Code/picCode.csv",dotDen, delimiter=',', fmt= '%d')
+numpy.savetxt("/Users/picCode.csv",dotDen, delimiter=',', fmt= '%d') #my specific file path omitted for privacy

@@ -1,20 +1,19 @@
 
-int r = 20;
-int c = 20;
+int speedSig = 200; //as a result of PID.Compute() from tests
+unsigned long cmTime = 460;
 
-int speedSig = 105; //as a result of PID.Compute() from tests
-int cmTime = 1830;
-
-#define xPin1 9;
-#define xPin2 10;
-#define yPin1 7;
-#define yPin2 8;
+#define xPin1 9
+#define xPin2 10
+#define yPin1 7
+#define yPin2 8
 
 int i = 0;
 int j = 0;
+int r = 20;
+int c = 20;
+int repos = 0;
 
-
-int picCode[r][c] = { {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+int picCode[20][20] = { {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
                       {1,1,1,1,1,1,1,1,1,1,1,8,8,7,6,1,1,1,1,1},
                       {1,1,1,1,1,1,1,1,1,1,7,7,7,7,1,1,1,1,1,1},
                       {1,1,1,1,1,1,1,8,1,6,5,6,6,1,1,1,1,1,1,1},
@@ -43,25 +42,32 @@ void setup() {
   pinMode(yPin2, OUTPUT);
 
   Serial.begin(9600);
+
+  repos = cmTime*14;
 }
 
+
 void loop() {
-  for (i = 0; i < r; i++){
-    for (j = 0; j < c; j++){
-      analogWrite(yPin1, speedSig); //move y-axis in cm increments
-      analogWrite(yPin2, 0);
+  //delay(1000000);
+  for (int i = 0; i < r; i++){
+    j = 0;
+    for (int j = 0; j < c; j++){
+      Serial.println(j);
+      analogWrite(yPin1, speedSig);
+      analogWrite(yPin2, 0);//move y-axis in cm increments
       delay(cmTime);
       analogWrite(yPin1, 0);
-      //enter servo stuff here
-      }
-    analogWrite(yPin2, speedSig); //reposition y-axis back to start
+      delay(1000);
+    }
+    analogWrite(yPin2, 240); //reposition y-axis
     analogWrite(yPin1, 0);
-    delay(c*cmTime);
-    analogWrite(yPin2,0);
+    delay(repos);
+    analogWrite(yPin2, 0);
 
     analogWrite(xPin1, speedSig); //move x-axis in cm increments
     analogWrite(xPin2, 0);
     delay(cmTime);
     analogWrite(xPin1, 0);
-    }
+  }
+
 }

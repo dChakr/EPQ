@@ -1,11 +1,19 @@
+//Arduino Code v.2 - 14/09/19
 
-int speedSig = 200; //as a result of PID.Compute() from tests
-unsigned long cmTime = 460;
+#include <Servo.h>
 
 #define xPin1 9
 #define xPin2 10
 #define yPin1 7
 #define yPin2 8
+
+Servo penServo;
+int servoPin = 30;
+unsigned int tPeriod = 600; //change when pointillism process is sorted
+
+int speedSig = 200; //as a result of PID.Compute() from tests
+unsigned int cmTime = 460;
+
 
 int i = 0;
 int j = 0;
@@ -41,22 +49,22 @@ void setup() {
   pinMode(yPin1, OUTPUT);
   pinMode(yPin2, OUTPUT);
 
-  Serial.begin(9600);
+  penServo.attach(servoPin);
 
   repos = cmTime*14;
+  //Serial.begin(9600); leave for debugging
 }
 
 
 void loop() {
-  //delay(1000000);
   for (int i = 0; i < r; i++){
     j = 0;
     for (int j = 0; j < c; j++){
-      Serial.println(j);
       analogWrite(yPin1, speedSig);
       analogWrite(yPin2, 0);//move y-axis in cm increments
       delay(cmTime);
       analogWrite(yPin1, 0);
+      Pointillism();
       delay(1000);
     }
     analogWrite(yPin2, 240); //reposition y-axis
@@ -70,4 +78,14 @@ void loop() {
     analogWrite(xPin1, 0);
   }
 
+}
+
+void Pointillism() {
+    unsigned long tStart = millis();
+    while((millis()-tStart) < tPeriod){
+      penServo.write(90);
+      delay(300);
+      penServo.write(45);
+      delay(300);
+  }
 }

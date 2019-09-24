@@ -1,4 +1,4 @@
-# Image Conversion Program (Program 1 of Project) final: 14/08/19
+# Image Conversion Program (Program 1 of Project) final: 24/09/19
 
 from PIL import Image
 import numpy
@@ -45,4 +45,4 @@ for x in range(0,w):
         dotDen[y,x] = code
 
 # save dotDen array as csv (in same directory as image)
-numpy.savetxt("/Users/picCode.csv",dotDen, delimiter=',', fmt= '%d') #my specific file path omitted for privacy
+numpy.savetxt("/Users/picCode.TXT",dotDen, delimiter=',', fmt= '%d') #my specific file path omitted for privacy

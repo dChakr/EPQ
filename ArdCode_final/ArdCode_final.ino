@@ -24,7 +24,7 @@ int colNum = 20;
                      
 
 void setup() {
-  //Serial.begin(9600); //leave for debugging
+  //open SD card for access
   if (!SD.begin(CS_PIN)){
     Serial.print("Here");
     };
@@ -77,32 +77,21 @@ void loop() {
       n = readField(&SD_File, str, sizeof(str), ",\n");
       dotDen[r][c] = strtol(str, &ptr, 10);}    
   }
-
-//for debugging: print dotDen
-  for (i = 0; i < rowNum; i++) {
-    for (j = 0; j < colNum; j++) {
-      if (j) {
-        Serial.print(' ');
-      }
-      Serial.print(dotDen[i][j]);
-    }
-    Serial.println();
-  }
-  
+ 
   SD_File.close();
 
  //actual movement of machine
  penServo.write(45);
   for (int i = 0; i < rowNum; i++){
     j = 0;
-    for (int j = 0; j < colNum; j++){
+    for (int j = 0; j < colNum; j++){ //move y-axis in cm increments
       analogWrite(yPin1, speedSig_y);
-      analogWrite(yPin2, 0);//move y-axis in cm increments
+      analogWrite(yPin2, 0);
       delay(cmTime_y);
       analogWrite(yPin1, 0);
 
       dotVal = dotDen[i][j];
-      cTime = Pointillism(dotVal);
+      cTime = Pointillism(dotVal); //Call Pointillism function to control repetitions of servo motor
       
       if (dotVal != 1){
         for (int track = 0; track<(dotVal-1); track++){
@@ -120,7 +109,7 @@ void loop() {
       delay(1000);
     }
     
-    int a = 0;
+    int a = 0; //reposition y-axis back to starting position for next row
     for (int a = 0; a < colNum; a++){
       analogWrite(yPin2, speedSig_y);
       analogWrite(yPin1, 0);
@@ -128,7 +117,7 @@ void loop() {
       analogWrite(yPin2, 0);
       delay(100);
     }
-    Serial.println(i);
+    Serial.println(i); //move the x-axis
     analogWrite(xPin1, speedSig_x);
     analogWrite(xPin2, 0);
     delay(cmTime_x);
@@ -141,11 +130,11 @@ void loop() {
 
 }
 
+//function to read information from picCode file
 size_t readField(File* SD_File, char* str, size_t size, char* delim) {
   char ch;
   size_t n = 0;
   while ((n + 1) < size && SD_File->read(&ch, 1) == 1) {
-    // Delete CR.
     if (ch == '\r') {
       continue;
     }
@@ -157,6 +146,8 @@ size_t readField(File* SD_File, char* str, size_t size, char* delim) {
   str[n] = '\0';
   return n;
 }
+
+// fucntion to allocate time for contact on paper to a element based on its value of in dotDen 
 
 int Pointillism(int dotVal) {
   int track = 0;
